@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
+
+class Program
+{
+    static List<string> books = new List<string>();
+
+    static void Main()
+    {
+        LoadBooks();
+
+        while (true)
+        {
+            Console.WriteLine("1. Добавить книгу");
+            Console.WriteLine("2. Показать все книги");
+            Console.WriteLine("3. Сохранить и выйти");
+
+            int choice = int.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    AddBook();
+                    break;
+                case 2:
+                    ShowBooks();
+                    break;
+                case 3:
+                    SaveBooks();
+                    return;
+            }
+        }
+    }
+
+    static void LoadBooks()
+    {
+        if (File.Exists("books.txt"))
+        {
+            string json = File.ReadAllText("books.txt");
+            books = JsonConvert.DeserializeObject<List<string>>(json);
+        }
+    }
+
+    static void SaveBooks()
+    {
+        string json = JsonConvert.SerializeObject(books);
+        File.WriteAllText("books.txt", json);
+    }
+
+    static void AddBook()
+    {
+        Console.WriteLine("Введите название книги:");
+        string book = Console.ReadLine();
+        books.Add(book);
+    }
+
+    static void ShowBooks()
+    {
+        if (books.Count == 0)
+        {
+            Console.WriteLine("Список книг пуст");
+        }
+        else
+        {
+            foreach (var book in books)
+            {
+                Console.WriteLine(book);
+            }
+        }
+    }
+}
